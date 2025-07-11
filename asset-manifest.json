@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/icecanvas/static/css/main.ef383b12.css",
+    "main.js": "/icecanvas/static/js/main.d9ae102d.js",
+    "static/js/453.5e623970.chunk.js": "/icecanvas/static/js/453.5e623970.chunk.js",
+    "index.html": "/icecanvas/index.html",
+    "main.ef383b12.css.map": "/icecanvas/static/css/main.ef383b12.css.map",
+    "main.d9ae102d.js.map": "/icecanvas/static/js/main.d9ae102d.js.map",
+    "453.5e623970.chunk.js.map": "/icecanvas/static/js/453.5e623970.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ef383b12.css",
+    "static/js/main.d9ae102d.js"
+  ]
+}
