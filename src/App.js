@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { ChevronRight, Mail, MessageSquare, CheckCircle, Eye, MousePointerClick, Calendar, Clock, XCircle, Sparkles, Gift, Globe, Smartphone, Send, TrendingUp, Target } from 'lucide-react';
+import { ChevronRight, Mail, MessageSquare, CheckCircle, Eye, MousePointerClick, Calendar, Clock, XCircle, Sparkles, Gift, Globe, Smartphone, Send, TrendingUp, Target, User, Shield, FileText, Megaphone, Zap, BarChart2, Edit3, Settings, Phone, Mic, Clipboard, Ticket } from 'lucide-react';
 
 // --- Branding Colors ---
 const aiaColors = {
@@ -10,7 +10,7 @@ const aiaColors = {
   secondary: '#E85B81',
   textPrimary: '#333333',
   textSecondary: '#6b7280',
-  background: '#f9fafb',
+  background: '#f8fafc',
   surface: '#ffffff',
 };
 
@@ -33,30 +33,93 @@ const mockCustomerData = [
 const allCustomers = [
   { id: 1, name: 'Johnathan Doe', filter: 'Single Policy', policyType: 'Life Insurance', premium: 1200, policyNo: 'T123xxx456', sumAssured: 50000, nextDueDate: '2025-01-15', segmentation: 'Young Professional' },
   { id: 2, name: 'Jane Smith', filter: 'Maturity', policyType: 'Life Insurance', maturityDate: '2024-08-15', policyNo: 'T123xxx789', sumAssured: 250000, nextDueDate: '2024-08-01', segmentation: 'Pre-Retiree' },
-  { id: 3, name: 'Peter Jones', filter: 'Single Policy', policyType: 'Health Insurance', premium: 1800, policyNo: 'T111xxx456', sumAssured: 300000, nextDueDate: '2024-11-20', segmentation: 'Family Head' },
-  { id: 4, name: 'Mary Williams', filter: 'High Value', policyType: 'PA Policy', premium: 3500, policyNo: 'T123xxx012', sumAssured: 1000000, nextDueDate: '2024-09-10', segmentation: 'High Net Worth' },
-  { id: 5, name: 'David Brown', filter: 'Maturity', policyType: 'Annuity', maturityDate: '2024-09-01', policyNo: 'T199xxx456', sumAssured: 150000, nextDueDate: '2024-08-25', segmentation: 'Retiree' },
-  { id: 6, name: 'Sarah Miller', filter: 'Single Policy', policyType: 'Health Insurance', premium: 950, policyNo: 'T123xxx106', sumAssured: 75000, nextDueDate: '2024-12-05', segmentation: 'Young Professional' },
-  { id: 7, name: 'Michael Davis', filter: 'High Value', policyType: 'Life Insurance', premium: 5000, policyNo: 'T123xxx001', sumAssured: 1500000, nextDueDate: '2025-02-01', segmentation: 'High Net Worth' },
-  { id: 8, name: 'Emily Garcia', filter: 'Maturity', policyType: 'Endowment Plan', maturityDate: '2024-07-25', policyNo: 'T002xxx456', sumAssured: 100000, nextDueDate: '2024-07-20', segmentation: 'Pre-Retiree' },
+  // ... other customers
 ];
+
+const customerProfileData = {
+    1: {
+        aiSummary: {
+            segmentation: 'Young Professional, Tech Savvy',
+            coverageSummary: 'Currently holds a basic life insurance policy. Solid foundation but lacks critical illness and long-term savings components.',
+            protectionGaps: 'Significant gap in critical illness coverage. No retirement or long-term investment plan in place.',
+            claimFrequency: 'Low. No claims filed in the last 5 years.'
+        },
+        aiRecommendation: {
+            journey: 'Critical Illness Awareness',
+            isReadyToBuy: true,
+            salesTalk: {
+                opening: "Hi Johnathan, I was reviewing your portfolio and noticed you've built a great foundation with your life policy. Have you considered how to protect your income if you were unable to work due to a serious illness?",
+                keyPoints: [
+                    "Critical illness plans provide a lump-sum payment upon diagnosis.",
+                    "This can cover medical bills, daily expenses, and replace lost income.",
+                    "Our plans are flexible and can be tailored to your budget and needs."
+                ],
+                closing: "Would you be open to a 15-minute chat next week to explore how this could fit into your financial plan?"
+            }
+        }
+    },
+    2: {
+        aiSummary: {
+            segmentation: 'Pre-Retiree, Conservative Investor',
+            coverageSummary: 'Long-term life policy is maturing soon. Has a small health plan.',
+            protectionGaps: 'Post-retirement income stream is not defined. Health coverage may be insufficient for future needs.',
+            claimFrequency: 'None.'
+        },
+        aiRecommendation: {
+            journey: 'Retirement Planning',
+            isReadyToBuy: false,
+        }
+    }
+}
 
 const engagementJourneys = {
   1: {
     customerName: 'Johnathan Doe',
-    journey: [
-      { day: 1, title: 'Welcome & Onboarding', status: 'Sent', date: '2024-07-10', time: '09:15 AM', content: { image: 'https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=1', url: 'https://your-agency.com/welcome/johndoe', caption: "Hi Johnathan, welcome to our agency! Here's your digital welcome kit to get you started. We're thrilled to have you.", aiSuggestions: ["Welcome aboard, Johnathan! We're excited to protect what matters most to you. Your welcome kit is ready for you here.", "A big welcome to the family, Johnathan! Your journey to a more secure future starts now. Check out your welcome pack.", "Hello Johnathan, and thank you for choosing us. Here is your personalized welcome kit. We look forward to serving you."], recommendedTime: "Today at 4:30 PM" } },
-      { day: 7, title: 'First Week Check-in', status: 'Opened', date: '2024-07-17', time: '11:30 AM', content: { image: 'https://images.pexels.com/photos/3760263/pexels-photo-3760263.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=1', url: 'https://your-agency.com/policy-check/johndoe', caption: "Hope you're having a great first week! Just checking in to see if you have any questions about your new policy.", aiSuggestions: ["Hi Johnathan, just a quick check-in. How are you finding everything with your new policy? I'm here if you need anything.", "It's been a week! I wanted to see if you had any questions or if there is anything I can clarify about your coverage.", "Hope you're settling in well. Don't hesitate to reach out if any questions have come up about your policy."], recommendedTime: "Tomorrow at 11:00 AM" } },
-      { day: 30, title: 'Policy Review & Cross-sell', status: 'Clicked', date: '2024-08-09', time: '02:00 PM', content: { image: 'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=1', url: 'https://your-agency.com/more-options/johndoe', caption: "Did you know we also offer great rates on home insurance? Let's see if we can bundle and save you more!", aiSuggestions: ["As your needs evolve, your coverage should too. I noticed you have auto insurance with us - have you considered our home policies? We could save you money by bundling.", "Protecting your car is smart. Protecting your home is essential. Let's explore how bundling your insurance could lead to significant savings.", "I have an idea that could save you money. Many of our clients benefit from bundling their policies. Would you be open to a quick chat about home insurance?"], recommendedTime: "Friday at 2:15 PM" } },
-      { day: 90, title: 'Quarterly Newsletter', status: 'Pending', date: null, time: null, content: { image: 'https://images.pexels.com/photos/3760069/pexels-photo-3760069.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=1', url: 'https://your-agency.com/newsletter/q3', caption: "Stay up-to-date with our latest news and tips for staying protected. Here is our quarterly newsletter.", aiSuggestions: ["Your latest insights are here! Check out our quarterly newsletter for tips and updates to keep you and your family safe.", "Knowledge is power. Our new newsletter is packed with valuable information. Hope you find it useful!", "Here's a little something to keep you informed. Enjoy our latest newsletter!"], recommendedTime: "Next Monday at 9:00 AM" } },
+    journeys: [
+        {
+            name: 'Onboarding Journey',
+            status: 'Completed',
+            nodes: [
+              { day: 1, type: 'content', title: 'Welcome & Onboarding', status: 'Sent', date: '2024-07-10', time: '09:15 AM', content: { image: 'https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=1', url: 'https://your-agency.com/welcome/johndoe', caption: "Hi Johnathan, welcome to our agency! Here's your digital welcome kit to get you started. We're thrilled to have you.", aiSuggestions: ["Welcome aboard, Johnathan! We're excited to protect what matters most to you. Your welcome kit is ready for you here."], recommendedTime: "Today at 4:30 PM" } },
+              { day: 7, type: 'call', title: 'First Week Follow-up Call', status: 'Completed', date: '2024-07-17', time: '11:30 AM', content: {
+                  script: {
+                      opening: "Hi Johnathan, it's Alex from AIA. How are you finding everything after the first week?",
+                      keyPoints: ["Confirm he received the welcome kit.", "Ask if he has any initial questions about his policy.", "Remind him about the AIA+ app for easy policy management."],
+                      closing: "Great! Don't hesitate to reach out if anything comes up. Have a great day!"
+                  },
+                  recommendedTime: "Tomorrow at 11:00 AM"
+              }},
+              { day: 14, type: 'content', title: 'Value-add Content', status: 'Sent', date: '2024-07-24', time: '10:00 AM', content: { image: 'https://images.pexels.com/photos/164527/pexels-photo-164527.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=1', url: 'https://your-agency.com/financial-tips/johndoe', caption: "Here are 3 quick tips for long-term financial planning. Hope you find it useful!", aiSuggestions: ["Planning for the future is key. Here are some tips to get you started."], recommendedTime: "Wednesday at 10:00 AM" } },
+            ]
+        },
+        {
+            name: 'Critical Illness (CI) Booster',
+            status: 'Pending',
+            nodes: [
+              { day: 1, type: 'content', title: 'Intro to CI Protection', status: 'Pending', date: null, time: null, content: { image: 'https://images.pexels.com/photos/590022/pexels-photo-590022.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=1', url: 'https://your-agency.com/ci-info/johndoe', caption: "Protecting your income is as important as protecting your life. Here's some info on how Critical Illness coverage can secure your finances.", aiSuggestions: ["Health is wealth. Here's a quick look at why CI coverage is a cornerstone of a solid financial plan."], recommendedTime: "Friday at 2:15 PM" } },
+              { day: 15, type: 'event', title: 'Wealth & Health Seminar', status: 'Pending', date: null, time: null, content: {
+                  eventName: "Wealth & Health Seminar",
+                  eventDate: "August 15, 2025",
+                  eventLocation: "AIA Tower, Bangkok",
+                  invitationText: "We'd be delighted for you to join our exclusive seminar on building a healthy financial future. Learn from experts and enjoy a complimentary dinner.",
+                  recommendedTime: "2 weeks before event"
+              }},
+              { day: 30, type: 'content', title: 'CI Success Story', status: 'Pending', date: null, time: null, content: { image: 'https://images.pexels.com/photos/4195342/pexels-photo-4195342.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=1', url: 'https://your-agency.com/ci-story/johndoe', caption: "See how having the right coverage made a difference for one of our clients. A truly inspiring story.", aiSuggestions: ["Real stories, real impact. See how CI coverage helped a family in their time of need."], recommendedTime: "Monday at 9:30 AM" } },
+            ]
+        }
     ]
   },
   2: {
     customerName: 'Jane Smith',
-    journey: [
-      { day: 1, title: 'Maturity Approaching', status: 'Sent', date: '2024-07-01', time: '10:00 AM', content: { image: 'https://placehold.co/600x400/fdedf1/D31145?text=Big+Day+Soon!', url: 'https://your-agency.com/maturity/janesmith', caption: "Hi Jane, your policy is maturing soon! Let's connect to discuss your options and ensure a smooth process.", aiSuggestions: ["Exciting news, Jane! Your policy is nearing its maturity date. I'd love to walk you through the next steps and your options.", "The big day is almost here! Your policy is maturing soon. Let's schedule a brief chat to ensure you make the most of it.", "As your policy maturity date approaches, I want to make sure you have all the information you need. Let's discuss your fantastic options."], recommendedTime: "Today at 3:00 PM" } },
-      { day: 15, title: 'Re-investment Options', status: 'Opened', date: '2024-07-16', time: '03:45 PM', content: { image: 'https://placehold.co/600x400/cce7e7/4a4a4a?text=Future+Growth', url: 'https://your-agency.com/reinvest/janesmith', caption: "Have you considered your next financial goal? We have some excellent re-investment opportunities perfect for you.", aiSuggestions: ["Now that your policy has matured, let's talk about the future. I have some exciting re-investment ideas that align with your financial goals.", "Congratulations on your policy's maturity! This is a perfect time to explore new growth opportunities. Shall we look at some options together?", "What's your next big financial dream? Let's use the foundation you've built to reach even higher. I have some re-investment strategies to share."], recommendedTime: "Tomorrow at 1:30 PM" } },
-      { day: 30, title: 'Final Reminder', status: 'Pending', date: null, time: null, content: { image: 'https://placehold.co/600x400/fdebd0/4a4a4a?text=Final+Steps', url: 'https://your-agency.com/final-reminder/janesmith', caption: "Just a friendly reminder about your upcoming policy maturity. Let's finalize the details!", aiSuggestions: ["Hi Jane, just a quick and friendly reminder about your policy's maturity. Let's touch base soon to finalize everything.", "Don't forget, your policy matures soon! I'm here to help with the final steps and answer any last-minute questions.", "Final call! Let's make sure everything is in order for your policy maturity. Looking forward to assisting you."], recommendedTime: "Friday at 10:00 AM" } },
+    journeys: [
+        {
+            name: 'Maturity Journey',
+            status: 'Pending',
+            nodes: [
+                { day: 1, type: 'content', title: 'Maturity Approaching', status: 'Sent', date: '2024-07-01', time: '10:00 AM', content: { image: 'https://placehold.co/600x400/fdedf1/D31145?text=Big+Day+Soon!', url: 'https://your-agency.com/maturity/janesmith', caption: "Hi Jane, your policy is maturing soon! Let's connect to discuss your options and ensure a smooth process.", aiSuggestions: ["Exciting news, Jane! Your policy is nearing its maturity date. I'd love to walk you through the next steps and your options."], recommendedTime: "Today at 3:00 PM" } },
+                { day: 15, type: 'content', title: 'Re-investment Options', status: 'Pending', date: null, time: null, content: { image: 'https://images.pexels.com/photos/210600/pexels-photo-210600.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=1', url: 'https://your-agency.com/reinvest/janesmith', caption: "Let's make your money work harder. Here are some top re-investment options to consider for your matured funds.", aiSuggestions: ["Ready for your next financial chapter? Explore these smart re-investment opportunities."], recommendedTime: "Tomorrow at 2:00 PM" } },
+            ]
+        }
     ]
   },
 };
@@ -66,14 +129,15 @@ const customerInteractions = {
         recommendation: {
             intent: 'High Intent to Buy',
             summary: 'Johnathan has actively engaged with all outreach, visited the policy details page, and used the app. This indicates a strong interest in his current and potentially new products.',
-            nextBestAction: 'Initiate a conversation about HNW product.'
+            nextBestAction: 'Initiate a conversation about a High Net Worth product.'
         },
         timeline: [
-            { type: 'Email', description: 'Opened "Welcome & Onboarding" email', time: '2024-07-10 09:25 AM' },
-            { type: 'Website', description: 'Visited personalized welcome page', time: '2024-07-10 09:26 AM' },
+            { type: 'Application', description: 'Used premium calculator for Critical Illness', time: '2024-07-16 11:45 AM' },
+            { type: 'Website', description: 'Viewed "Critical Illness" product page for 8 minutes', time: '2024-07-16 11:37 AM' },
+            { type: 'Email', description: 'Clicked link in "Policy Review & Cross-sell" email', time: '2024-07-15 02:05 PM' },
             { type: 'Application', description: 'Logged into the AIA+ application', time: '2024-07-12 03:00 PM' },
-            { type: 'Email', description: 'Clicked link in "First Week Check-in" email', time: '2024-07-17 11:35 AM' },
-            { type: 'Website', description: 'Viewed policy details page for 5 minutes', time: '2024-07-17 11:36 AM' },
+            { type: 'Website', description: 'Visited personalized welcome page', time: '2024-07-10 09:26 AM' },
+            { type: 'Email', description: 'Opened "Welcome & Onboarding" email', time: '2024-07-10 09:25 AM' },
         ]
     },
     2: {
@@ -83,10 +147,10 @@ const customerInteractions = {
             nextBestAction: 'Send a follow-up with a clear comparison of two top re-investment options.'
         },
         timeline: [
-            { type: 'Email', description: 'Opened "Maturity Approaching" email', time: '2024-07-01 10:15 AM' },
-            { type: 'LINE', description: 'Replied to agent\'s message', time: '2024-07-02 08:00 AM' },
-            { type: 'Website', description: 'Viewed re-investment options page', time: '2024-07-16 04:00 PM' },
             { type: 'Application', description: 'Used the premium calculator tool', time: '2024-07-18 11:00 AM' },
+            { type: 'Website', description: 'Viewed re-investment options page', time: '2024-07-16 04:00 PM' },
+            { type: 'LINE', description: 'Replied to agent\'s message', time: '2024-07-02 08:00 AM' },
+            { type: 'Email', description: 'Opened "Maturity Approaching" email', time: '2024-07-01 10:15 AM' },
         ]
     }
 };
@@ -149,7 +213,7 @@ const CustomerList = ({ onCustomerSelect }) => {
           <div
             key={customer.id}
             onClick={() => onCustomerSelect(customer.id)}
-            className="p-4 bg-gray-50 rounded-lg cursor-pointer transition-all duration-200 hover:bg-red-50"
+            className="p-4 bg-gray-50 rounded-lg cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
             style={{borderLeft: `5px solid ${aiaColors.primary}`}}
           >
             <div className="flex items-center justify-between">
@@ -193,42 +257,128 @@ const Dashboard = ({ onCustomerSelect }) => (
   </div>
 );
 
-const StatusBadge = ({ status, date, time }) => {
-    const statusInfo = {
-        Sent: { icon: <CheckCircle className="h-4 w-4" />, color: 'bg-blue-100 text-blue-800' },
-        Opened: { icon: <Eye className="h-4 w-4" />, color: 'bg-green-100 text-green-800' },
-        Clicked: { icon: <MousePointerClick className="h-4 w-4" />, color: 'bg-purple-100 text-purple-800' },
-        Pending: { icon: <Clock className="h-4 w-4" />, color: 'bg-yellow-100 text-yellow-800' },
-    };
+// --- Customer Profile Page Components ---
 
-    const currentStatus = statusInfo[status] || statusInfo['Pending'];
-
+const SalesTalkModal = ({ salesTalk, onClose }) => {
+    if (!salesTalk) return null;
     return (
-        <div className="mt-4">
-            <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${currentStatus.color}`}>
-                {currentStatus.icon}
-                <span>{status}</span>
-            </div>
-            {date && time && (
-                <div className="flex items-center gap-4 text-xs text-gray-500 mt-2 ml-1">
-                    <div className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        <span>{date}</span>
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg">
+                <div className="p-4 border-b flex justify-between items-center">
+                    <h3 className="text-lg font-bold" style={{color: aiaColors.primary}}>AI Sales Talk Assistant</h3>
+                    <button onClick={onClose}><XCircle className="h-6 w-6 text-gray-400 hover:text-gray-600"/></button>
+                </div>
+                <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+                    <div>
+                        <h4 className="font-bold text-gray-800">Opening Line:</h4>
+                        <p className="text-gray-600 mt-1 italic">"{salesTalk.opening}"</p>
                     </div>
-                    <div className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        <span>{time}</span>
+                    <div>
+                        <h4 className="font-bold text-gray-800">Key Talking Points:</h4>
+                        <ul className="list-disc list-inside mt-1 space-y-1 text-gray-600">
+                            {salesTalk.keyPoints.map((point, i) => <li key={i}>{point}</li>)}
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 className="font-bold text-gray-800">Suggested Closing:</h4>
+                        <p className="text-gray-600 mt-1 italic">"{salesTalk.closing}"</p>
                     </div>
                 </div>
-            )}
+                 <div className="p-4 bg-gray-50 border-t text-right">
+                    <button onClick={onClose} className="px-4 py-2 text-white rounded-lg font-semibold transition-colors shadow" style={{backgroundColor: aiaColors.primary}}>Close</button>
+                </div>
+            </div>
         </div>
     );
 };
 
+const CustomerDetailsTab = ({ profileData, onStartJourney, onOpenSalesTalk }) => {
+    if (!profileData) return <div className="p-8 text-center text-gray-500">No customer details available.</div>;
+    const { aiSummary, aiRecommendation } = profileData;
 
-const EngagementNode = ({ node, onAction }) => {
+    return (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-1">
+            <div className="bg-white p-6 rounded-xl shadow-md">
+                <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 rounded-full" style={{backgroundColor: aiaColors.primaryLight}}><Sparkles className="h-6 w-6" style={{color: aiaColors.primary}}/></div>
+                    <h3 className="text-xl font-bold" style={{color: aiaColors.textPrimary}}>AI Summary</h3>
+                </div>
+                <div className="space-y-3 text-sm">
+                    <p><strong className="font-semibold text-gray-700">Segmentation:</strong> {aiSummary.segmentation}</p>
+                    <p><strong className="font-semibold text-gray-700">Coverage Summary:</strong> {aiSummary.coverageSummary}</p>
+                    <p><strong className="font-semibold text-gray-700">Protection Gaps:</strong> {aiSummary.protectionGaps}</p>
+                    <p><strong className="font-semibold text-gray-700">Claim Frequency:</strong> {aiSummary.claimFrequency}</p>
+                </div>
+            </div>
+            <div className="bg-white p-6 rounded-xl shadow-md">
+                <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 rounded-full" style={{backgroundColor: aiaColors.primaryLight}}><Target className="h-6 w-6" style={{color: aiaColors.primary}}/></div>
+                    <h3 className="text-xl font-bold" style={{color: aiaColors.textPrimary}}>AI Recommendation</h3>
+                </div>
+                <div className="space-y-4">
+                    <div>
+                        <p className="font-semibold text-gray-700">Recommended Journey:</p>
+                        <p className="text-gray-600">{aiRecommendation.journey}</p>
+                        <button onClick={onStartJourney} className="mt-2 text-sm font-bold py-2 px-4 rounded-lg text-white transition-transform hover:scale-105" style={{backgroundColor: aiaColors.primary}}>
+                            Start Journey
+                        </button>
+                    </div>
+                    {aiRecommendation.isReadyToBuy && (
+                        <div className="border-t pt-4">
+                            <p className="font-semibold text-gray-700">Purchase Intent:</p>
+                            <p className="text-green-600 font-bold">High - Ready to Buy!</p>
+                             <button onClick={onOpenSalesTalk} className="mt-2 text-sm font-bold py-2 px-4 rounded-lg text-white transition-transform hover:scale-105" style={{backgroundColor: aiaColors.secondary}}>
+                                Open Sales Talk
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const PlaceholderTab = ({ title }) => (
+    <div className="p-8 text-center text-gray-400 bg-white rounded-xl shadow-md">
+        <h3 className="text-xl font-semibold">This is the {title} tab.</h3>
+        <p>Content for this section is under development.</p>
+    </div>
+);
+
+const EditableField = ({ label, value, onChange }) => (
+    <div className="relative">
+        <label className="text-xs text-gray-500">{label}</label>
+        <input 
+            type="text"
+            value={value}
+            onChange={onChange}
+            className="w-full text-sm p-1 bg-gray-100 rounded-md border border-transparent hover:border-gray-300 focus:bg-white focus:border-red-300 focus:ring-1 focus:ring-red-200 outline-none transition"
+        />
+    </div>
+);
+
+const JourneyStatusBadge = ({ status, date, time }) => {
+    const statusInfo = {
+        Sent: { icon: <Send className="h-3 w-3" />, color: 'text-blue-800 bg-blue-100' },
+        Opened: { icon: <Eye className="h-3 w-3" />, color: 'text-green-800 bg-green-100' },
+        Clicked: { icon: <MousePointerClick className="h-3 w-3" />, color: 'text-purple-800 bg-purple-100' },
+        Pending: { icon: <Clock className="h-3 w-3" />, color: 'text-yellow-800 bg-yellow-100' },
+        Completed: { icon: <CheckCircle className="h-3 w-3" />, color: 'text-green-800 bg-green-100' },
+    };
+    const currentStatus = statusInfo[status] || statusInfo.Pending;
+    if (status === 'Pending') return <div className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium ${currentStatus.color}`}>{currentStatus.icon} <span>Pending</span></div>;
+    return (
+        <div className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium ${currentStatus.color}`}>
+            {currentStatus.icon}
+            <span>{status} on {date}</span>
+        </div>
+    );
+};
+
+const ContentNode = ({ node, onAction }) => {
   const [caption, setCaption] = useState(node.content.caption);
-  const [isEditing, setIsEditing] = useState(false);
+  const [imageUrl, setImageUrl] = useState(node.content.image);
+  const [personalizedUrl, setPersonalizedUrl] = useState(node.content.url);
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleGenerateCaption = () => {
@@ -239,7 +389,7 @@ const EngagementNode = ({ node, onAction }) => {
             const randomIndex = Math.floor(Math.random() * suggestions.length);
             setCaption(suggestions[randomIndex]);
             setIsGenerating(false);
-        }, 1500); // Simulate AI thinking time
+        }, 1500);
     } else {
         setTimeout(() => {
             setCaption("AI is thinking of something great to say...");
@@ -249,74 +399,192 @@ const EngagementNode = ({ node, onAction }) => {
   };
 
   return (
-    <div className="flex gap-4">
-      {/* Timeline Decorator */}
-      <div className="flex flex-col items-center">
-        <div className="flex-shrink-0 w-20 h-8 rounded-full text-white flex items-center justify-center font-semibold text-sm" style={{backgroundColor: aiaColors.primary}}>
-          Day {node.day}
+    <div className="bg-white p-4 rounded-xl shadow-md w-full max-w-2xl mx-auto">
+        <div className="flex justify-between items-start mb-2">
+            <h4 className="font-bold text-lg text-gray-800">{node.title}</h4>
+            <JourneyStatusBadge status={node.status} date={node.date} time={node.time} />
         </div>
-        <div className="w-px h-full bg-gray-300"></div>
-      </div>
-
-      {/* Content Card */}
-      <div className="flex-grow bg-white p-5 rounded-xl shadow-md mb-8">
-        <h4 className="font-bold text-lg text-gray-800">{node.title}</h4>
-        <StatusBadge status={node.status} date={node.date} time={node.time} />
-        
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-            <div className="space-y-4">
-                 <img src={node.content.image} alt={node.title} className="rounded-lg object-cover w-full h-auto aspect-video" 
-                    onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/600x400/cccccc/ffffff?text=Image+Error'; }}
-                 />
-                 <div className="p-3 bg-gray-100 rounded-lg">
-                    <p className="text-xs text-gray-500 mb-1">Personalized URL</p>
-                    <a href={node.content.url} target="_blank" rel="noopener noreferrer" className="hover:underline text-sm break-all" style={{color: aiaColors.primary}}>
-                        {node.content.url}
-                    </a>
-                 </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-3">
+                <div className="relative group">
+                    <img src={imageUrl} alt={node.title} className="rounded-lg object-cover w-full h-40" 
+                        onError={(e) => { e.target.onerror = null; e.target.src = 'https://placehold.co/600x400/cccccc/ffffff?text=Image+Error'; }}
+                    />
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 flex items-center justify-center transition-opacity cursor-pointer">
+                        <Edit3 className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity"/>
+                    </div>
+                </div>
+                <EditableField label="Image URL" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} />
             </div>
             <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                    <label htmlFor={`caption-${node.day}`} className="text-sm font-medium text-gray-700">
-                        Editable Caption
-                    </label>
-                    <button onClick={handleGenerateCaption} disabled={isGenerating} className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-md transition-colors" style={{color: aiaColors.primary, backgroundColor: aiaColors.primaryLight}}>
-                        <Sparkles className={`h-4 w-4 ${isGenerating ? 'animate-pulse' : ''}`} />
-                        {isGenerating ? 'Generating...' : 'AI Assistant'}
-                    </button>
-                </div>
-                <textarea
-                  id={`caption-${node.day}`}
-                  value={caption}
-                  onChange={(e) => setCaption(e.target.value)}
-                  onFocus={() => setIsEditing(true)}
-                  onBlur={() => setIsEditing(false)}
-                  rows="6"
-                  className={`w-full p-3 text-sm border rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 ${isEditing ? 'border-red-300 ring-red-200' : 'border-gray-300'} ${isGenerating ? 'animate-pulse' : ''}`}
-                  style={isEditing ? {borderColor: aiaColors.secondary} : {}}
-                />
-                <div className="flex flex-wrap gap-2 pt-2">
-                    <button onClick={() => onAction('Email', node, caption)} className="flex-grow sm:flex-grow-0 flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 shadow">
-                        <Mail className="h-4 w-4" /> Send Email
-                    </button>
-                    <button onClick={() => onAction('LINE', node, caption)} className="flex-grow sm:flex-grow-0 flex items-center justify-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200 shadow">
-                        <MessageSquare className="h-4 w-4" /> Send LINE
-                    </button>
-                </div>
-                <div className="mt-3 p-3 rounded-lg" style={{backgroundColor: aiaColors.primaryLight}}>
-                    <div className="flex items-center gap-2">
-                        <Gift className="h-5 w-5" style={{color: aiaColors.primary}} />
-                        <p className="font-bold text-sm" style={{color: aiaColors.primary}}>Powered by AI</p>
+                <EditableField label="Personalized URL" value={personalizedUrl} onChange={(e) => setPersonalizedUrl(e.target.value)} />
+                <div>
+                    <div className="flex justify-between items-center mb-1">
+                        <label className="text-xs text-gray-500">Editable Caption</label>
+                        <button onClick={handleGenerateCaption} disabled={isGenerating} className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-md transition-colors" style={{color: aiaColors.primary, backgroundColor: aiaColors.primaryLight}}>
+                            <Sparkles className={`h-4 w-4 ${isGenerating ? 'animate-pulse' : ''}`} />
+                            {isGenerating ? '...' : 'AI'}
+                        </button>
                     </div>
-                    <p className="text-sm mt-1" style={{color: aiaColors.textPrimary}}>
-                        Recommended send time: <span className="font-semibold">{node.content.recommendedTime}</span>
-                    </p>
+                    <textarea value={caption} onChange={(e) => setCaption(e.target.value)} rows="4" className={`w-full p-2 text-sm border rounded-lg transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-red-300 ${isGenerating ? 'animate-pulse' : 'border-gray-200'}`}/>
                 </div>
             </div>
         </div>
-      </div>
+        <div className="mt-4 border-t pt-4 flex justify-between items-center">
+             <div className="flex items-center gap-2 text-xs text-gray-500">
+                <Gift className="h-4 w-4" style={{color: aiaColors.primary}} />
+                <span>Recommended Time: <span className="font-semibold">{node.content.recommendedTime}</span></span>
+            </div>
+            <div className="flex gap-2">
+                <button onClick={() => onAction('Email', node, caption)} className="flex items-center justify-center gap-2 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 shadow text-sm"><Mail className="h-4 w-4" /> Email</button>
+                <button onClick={() => onAction('LINE', node, caption)} className="flex items-center justify-center gap-2 px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200 shadow text-sm"><MessageSquare className="h-4 w-4" /> LINE</button>
+            </div>
+        </div>
     </div>
   );
+};
+
+const CallNode = ({ node, onAction }) => (
+    <div className="bg-white p-4 rounded-xl shadow-md w-full max-w-2xl mx-auto">
+        <div className="flex justify-between items-start mb-2">
+            <h4 className="font-bold text-lg text-gray-800">{node.title}</h4>
+            <JourneyStatusBadge status={node.status} date={node.date} time={node.time} />
+        </div>
+        <div className="p-4 bg-gray-50 rounded-lg">
+            <div className="flex items-center gap-3 mb-3">
+                <Mic className="h-5 w-5" style={{color: aiaColors.primary}}/>
+                <h5 className="font-bold text-gray-800">Call Script</h5>
+            </div>
+            <div className="space-y-2 text-sm text-gray-600">
+                <p><strong className="font-semibold">Opening:</strong> {node.content.script.opening}</p>
+                <div>
+                    <strong className="font-semibold">Key Points:</strong>
+                    <ul className="list-disc list-inside ml-2">
+                        {node.content.script.keyPoints.map((p, i) => <li key={i}>{p}</li>)}
+                    </ul>
+                </div>
+                <p><strong className="font-semibold">Closing:</strong> {node.content.script.closing}</p>
+            </div>
+        </div>
+        <div className="mt-4 border-t pt-4 flex justify-between items-center">
+             <div className="flex items-center gap-2 text-xs text-gray-500">
+                <Gift className="h-4 w-4" style={{color: aiaColors.primary}} />
+                <span>Recommended Time: <span className="font-semibold">{node.content.recommendedTime}</span></span>
+            </div>
+            <button onClick={() => onAction('Log Call', node)} className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 transition-colors duration-200 shadow text-sm"><Phone className="h-4 w-4" /> Log Call Outcome</button>
+        </div>
+    </div>
+);
+
+const EventNode = ({ node, onAction }) => (
+    <div className="bg-white p-4 rounded-xl shadow-md w-full max-w-2xl mx-auto">
+        <div className="flex justify-between items-start mb-2">
+            <h4 className="font-bold text-lg text-gray-800">{node.title}</h4>
+            <JourneyStatusBadge status={node.status} date={node.date} time={node.time} />
+        </div>
+        <div className="p-4 bg-gray-50 rounded-lg border-l-4" style={{borderColor: aiaColors.secondary}}>
+            <div className="flex items-center gap-3 mb-3">
+                <Ticket className="h-5 w-5" style={{color: aiaColors.primary}}/>
+                <h5 className="font-bold text-gray-800">{node.content.eventName}</h5>
+            </div>
+            <div className="space-y-1 text-sm text-gray-600">
+                <p><strong className="font-semibold">Date:</strong> {node.content.eventDate}</p>
+                <p><strong className="font-semibold">Location:</strong> {node.content.eventLocation}</p>
+                <p className="pt-2 italic">"{node.content.invitationText}"</p>
+            </div>
+        </div>
+        <div className="mt-4 border-t pt-4 flex justify-between items-center">
+             <div className="flex items-center gap-2 text-xs text-gray-500">
+                <Gift className="h-4 w-4" style={{color: aiaColors.primary}} />
+                <span>Recommended Time: <span className="font-semibold">{node.content.recommendedTime}</span></span>
+            </div>
+            <button onClick={() => onAction('Invite', node)} className="flex items-center justify-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors duration-200 shadow text-sm"><Send className="h-4 w-4" /> Send Invitation</button>
+        </div>
+    </div>
+);
+
+const JourneyRenderer = ({ journey, onAction }) => {
+    const [activeDayIndex, setActiveDayIndex] = useState(0);
+    const activeNode = journey.nodes[activeDayIndex];
+
+    const journeyStatusColor = journey.status === 'Completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800';
+
+    const renderNode = () => {
+        switch(activeNode.type) {
+            case 'content': return <ContentNode node={activeNode} onAction={onAction} />;
+            case 'call': return <CallNode node={activeNode} onAction={onAction} />;
+            case 'event': return <EventNode node={activeNode} onAction={onAction} />;
+            default: return <p>Unknown engagement type.</p>;
+        }
+    }
+
+    return (
+        <div>
+            <div className="flex items-center gap-3 mb-4">
+                <h3 className="text-lg font-bold" style={{color: aiaColors.textPrimary}}>{journey.name}</h3>
+                <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${journeyStatusColor}`}>{journey.status}</span>
+                <button className="text-gray-400 hover:text-gray-600"><Settings className="h-4 w-4"/></button>
+            </div>
+            <div className="flex border-b border-gray-200 mb-4">
+                {journey.nodes.map((node, index) => (
+                    <button 
+                        key={index}
+                        onClick={() => setActiveDayIndex(index)}
+                        className={`px-4 py-2 text-sm font-medium transition-colors ${activeDayIndex === index ? 'border-b-2 text-red-600' : 'text-gray-500 hover:text-gray-700'}`}
+                        style={activeDayIndex === index ? {borderColor: aiaColors.primary, color: aiaColors.primary} : {}}
+                    >
+                        Day {node.day}
+                    </button>
+                ))}
+            </div>
+            {renderNode()}
+        </div>
+    );
+};
+
+const AIRecommendationInteraction = ({ recommendation }) => {
+    if (!recommendation) return null;
+    const intentColor = recommendation.intent === 'High Intent to Buy' ? 'text-green-600 bg-green-100' : 'text-amber-600 bg-amber-100';
+    return (
+        <div className="bg-white p-5 rounded-xl shadow-md mb-8 border-l-4" style={{borderColor: aiaColors.primary}}>
+            <div className="flex items-center gap-3 mb-3">
+                <div className="p-2 rounded-full" style={{backgroundColor: aiaColors.primaryLight}}><Sparkles className="h-6 w-6" style={{color: aiaColors.primary}}/></div>
+                <h3 className="text-xl font-bold" style={{color: aiaColors.textPrimary}}>AI Recommendation</h3>
+            </div>
+            <div className="flex items-center gap-2"><TrendingUp className="h-5 w-5 text-gray-500" /><p className={`font-semibold px-3 py-1 rounded-full text-sm ${intentColor}`}>{recommendation.intent}</p></div>
+            <p className="text-gray-600 my-3">{recommendation.summary}</p>
+            <div className="bg-gray-50 p-3 rounded-lg flex items-start gap-3">
+                <Target className="h-5 w-5 text-gray-600 mt-1 flex-shrink-0" />
+                <div>
+                    <p className="font-bold text-sm text-gray-800">Next Best Action</p>
+                    <p className="text-sm text-gray-600">{recommendation.nextBestAction}</p>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const CustomerInteractionTimeline = ({ interactions }) => {
+    const interactionIcons = { Email: { icon: <Send className="h-5 w-5 text-blue-500" />, color: 'bg-blue-100' }, LINE: { icon: <MessageSquare className="h-5 w-5 text-green-500" />, color: 'bg-green-100' }, Website: { icon: <Globe className="h-5 w-5 text-indigo-500" />, color: 'bg-indigo-100' }, Application: { icon: <Smartphone className="h-5 w-5 text-sky-500" />, color: 'bg-sky-100' } };
+    if (!interactions || interactions.length === 0) return <div className="text-center py-12 text-gray-500"><p>No recent customer interactions found.</p></div>;
+    return (
+        <div className="relative p-4">
+            {interactions.map((item, index) => (
+                <div key={index} className="flex gap-4">
+                    <div className="flex flex-col items-center">
+                        <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${interactionIcons[item.type]?.color || 'bg-gray-100'}`}>{interactionIcons[item.type]?.icon || <Gift className="h-5 w-5 text-gray-500" />}</div>
+                        {index < interactions.length - 1 && <div className="w-px h-full bg-gray-300 my-2"></div>}
+                    </div>
+                    <div className="flex-grow pb-8">
+                        <div className="bg-white p-4 rounded-xl shadow-md">
+                            <p className="font-semibold text-gray-800">{item.description}</p>
+                            <p className="text-sm text-gray-500 mt-1">{item.time}</p>
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
 };
 
 const LinePreviewModal = ({ node, caption, onClose, onConfirmSend }) => {
@@ -368,181 +636,92 @@ const LinePreviewModal = ({ node, caption, onClose, onConfirmSend }) => {
     );
 };
 
-const AIRecommendation = ({ recommendation }) => {
-    if (!recommendation) return null;
-    
-    const intentColor = recommendation.intent === 'High Intent to Buy' ? 'text-green-600 bg-green-100' : 'text-amber-600 bg-amber-100';
-
-    return (
-        <div className="bg-white p-5 rounded-xl shadow-md mb-8 border-l-4" style={{borderColor: aiaColors.primary}}>
-            <div className="flex items-center gap-3 mb-3">
-                <div className="p-2 rounded-full" style={{backgroundColor: aiaColors.primaryLight}}>
-                    <Sparkles className="h-6 w-6" style={{color: aiaColors.primary}}/>
-                </div>
-                <h3 className="text-xl font-bold" style={{color: aiaColors.textPrimary}}>AI Recommendation</h3>
-            </div>
-            
-            <div className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-gray-500" />
-                <p className={`font-semibold px-3 py-1 rounded-full text-sm ${intentColor}`}>{recommendation.intent}</p>
-            </div>
-            
-            <p className="text-gray-600 my-3">{recommendation.summary}</p>
-
-            <div className="bg-gray-50 p-3 rounded-lg flex items-start gap-3">
-                <Target className="h-5 w-5 text-gray-600 mt-1 flex-shrink-0" />
-                <div>
-                    <p className="font-bold text-sm text-gray-800">Next Best Action</p>
-                    <p className="text-sm text-gray-600">{recommendation.nextBestAction}</p>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-const CustomerInteractionTimeline = ({ interactions }) => {
-    const interactionIcons = {
-        Email: { icon: <Send className="h-5 w-5 text-blue-500" />, color: 'bg-blue-100' },
-        LINE: { icon: <MessageSquare className="h-5 w-5 text-green-500" />, color: 'bg-green-100' },
-        Website: { icon: <Globe className="h-5 w-5 text-indigo-500" />, color: 'bg-indigo-100' },
-        Application: { icon: <Smartphone className="h-5 w-5 text-sky-500" />, color: 'bg-sky-100' },
-    };
-
-    if (!interactions || interactions.length === 0) {
-        return (
-            <div className="text-center py-12 text-gray-500">
-                <p>No recent customer interactions found.</p>
-            </div>
-        );
-    }
-
-    return (
-        <div className="relative p-4">
-            {interactions.map((item, index) => (
-                <div key={index} className="flex gap-4">
-                    <div className="flex flex-col items-center">
-                        <div className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${interactionIcons[item.type]?.color || 'bg-gray-100'}`}>
-                            {interactionIcons[item.type]?.icon || <Gift className="h-5 w-5 text-gray-500" />}
-                        </div>
-                        {index < interactions.length - 1 && <div className="w-px h-full bg-gray-300 my-2"></div>}
-                    </div>
-                    <div className="flex-grow pb-8">
-                        <div className="bg-white p-4 rounded-xl shadow-md">
-                            <p className="font-semibold text-gray-800">{item.description}</p>
-                            <p className="text-sm text-gray-500 mt-1">{item.time}</p>
-                        </div>
-                    </div>
-                </div>
-            ))}
-        </div>
-    );
-};
-
-
-const EngagementCanvas = ({ customerId, onBack }) => {
+const CustomerProfile = ({ customerId, onBack }) => {
+  const [customer, setCustomer] = useState(null);
+  const [profileData, setProfileData] = useState(null);
   const [journeyData, setJourneyData] = useState(null);
   const [interactionsData, setInteractionsData] = useState({ recommendation: null, timeline: [] });
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
+  const [showSalesTalk, setShowSalesTalk] = useState(false);
   const [linePreviewData, setLinePreviewData] = useState(null);
-  const [activeTab, setActiveTab] = useState('journey');
+  const [activeTab, setActiveTab] = useState('details');
 
   useEffect(() => {
-    const journey = engagementJourneys[customerId] || { customerName: 'Unknown Customer', journey: [] };
-    const interactionData = customerInteractions[customerId] || { recommendation: null, timeline: [] };
-    setJourneyData(journey);
-    setInteractionsData(interactionData);
+    setCustomer(allCustomers.find(c => c.id === customerId));
+    setProfileData(customerProfileData[customerId]);
+    setJourneyData(engagementJourneys[customerId]);
+    setInteractionsData(customerInteractions[customerId] || { recommendation: null, timeline: [] });
   }, [customerId]);
 
   const handleConfirmSend = useCallback((method) => {
-    setModalMessage(`Message sent via ${method}!`);
+    setModalMessage(`Action "${method}" logged successfully!`);
     setShowConfirmModal(true);
-    setLinePreviewData(null); // Close preview modal if open
+    setLinePreviewData(null);
     setTimeout(() => setShowConfirmModal(false), 2000);
   }, []);
 
   const handleNodeAction = useCallback((actionType, node, caption) => {
-    if (actionType === 'Email') {
-        handleConfirmSend('Email');
-    } else if (actionType === 'LINE') {
+    if (actionType === 'LINE') {
         setLinePreviewData({ node, caption });
+    } else {
+        handleConfirmSend(actionType);
     }
   }, [handleConfirmSend]);
 
-  if (!journeyData) {
-    return <div className="p-8 text-center">Loading engagement plan...</div>;
-  }
+  const tabs = [
+      { id: 'details', label: 'Customer Details', icon: User },
+      { id: 'policies', label: 'Policies', icon: Shield },
+      { id: 'claims', label: 'Claims', icon: FileText },
+      { id: 'campaigns', label: 'Campaigns', icon: Megaphone },
+      { id: 'journey', label: 'Engagement Journey', icon: Zap },
+      { id: 'interactions', label: 'Customer Interactions', icon: BarChart2 },
+  ];
+
+  if (!customer) return <div className="p-8 text-center">Loading customer profile...</div>;
 
   return (
     <div className="p-4 sm:p-6 md:p-8">
-      <button onClick={onBack} className="mb-6 font-semibold" style={{color: aiaColors.primary}}>
-        &larr; Back to Dashboard
-      </button>
-      <h1 className="text-3xl font-extrabold" style={{color: aiaColors.textPrimary}}>{journeyData.customerName}</h1>
-      <p className="mb-8" style={{color: aiaColors.textSecondary}}>Customer Engagement Hub</p>
+      <button onClick={onBack} className="mb-6 font-semibold" style={{color: aiaColors.primary}}>&larr; Back to Dashboard</button>
+      <h1 className="text-3xl font-extrabold" style={{color: aiaColors.textPrimary}}>{customer.name}</h1>
+      <p className="mb-8" style={{color: aiaColors.textSecondary}}>Customer Profile</p>
 
-      {/* Tabs */}
-      <div className="border-b border-gray-200 mb-6">
-        <nav className="-mb-px flex space-x-6">
-            <button
-                onClick={() => setActiveTab('journey')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
-                    activeTab === 'journey' 
-                    ? 'border-red-500 text-red-600' 
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-                style={activeTab === 'journey' ? {borderColor: aiaColors.primary, color: aiaColors.primary} : {}}
-            >
-                Engagement Journey
-            </button>
-            <button
-                onClick={() => setActiveTab('interactions')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200 ${
-                    activeTab === 'interactions' 
-                    ? 'border-red-500 text-red-600' 
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-                 style={activeTab === 'interactions' ? {borderColor: aiaColors.primary, color: aiaColors.primary} : {}}
-            >
-                Customer Interactions
-            </button>
-        </nav>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 mb-6">
+            {tabs.map(tab => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                    <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                        className={`py-3 px-2 rounded-lg font-medium text-sm transition-all duration-300 flex items-center justify-center gap-2 whitespace-nowrap ${isActive ? 'shadow-lg text-white' : 'text-gray-600 bg-white hover:bg-gray-100'}`}
+                        style={isActive ? {backgroundColor: aiaColors.primary} : {}}
+                    > <Icon className="h-5 w-5"/> {tab.label} </button>
+                );
+            })}
       </div>
 
-      {/* Tab Content */}
-      <div>
+      <div className="mt-4">
+        {activeTab === 'details' && <CustomerDetailsTab profileData={profileData} onStartJourney={() => setActiveTab('journey')} onOpenSalesTalk={() => setShowSalesTalk(true)} />}
+        {activeTab === 'policies' && <PlaceholderTab title="Policies" />}
+        {activeTab === 'claims' && <PlaceholderTab title="Claims" />}
+        {activeTab === 'campaigns' && <PlaceholderTab title="Campaigns" />}
         {activeTab === 'journey' && (
-            <div className="relative">
-                {journeyData.journey.map((node, index) => (
-                    <EngagementNode key={index} node={node} onAction={handleNodeAction} />
-                ))}
+            <div className="space-y-8">
+                {journeyData?.journeys?.length > 0 ? journeyData.journeys.map((journey, idx) => (
+                   <JourneyRenderer key={idx} journey={journey} onAction={handleNodeAction} />
+                )) : <PlaceholderTab title="Engagement Journey"/>}
             </div>
         )}
         {activeTab === 'interactions' && (
             <>
-                <AIRecommendation recommendation={interactionsData.recommendation} />
+                <AIRecommendationInteraction recommendation={interactionsData.recommendation} />
                 <CustomerInteractionTimeline interactions={interactionsData.timeline} />
             </>
         )}
       </div>
       
-      {showConfirmModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-xl text-center">
-            <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-            <p className="text-lg font-semibold">{modalMessage}</p>
-          </div>
-        </div>
-      )}
-
-      {linePreviewData && (
-        <LinePreviewModal 
-            node={linePreviewData.node}
-            caption={linePreviewData.caption}
-            onClose={() => setLinePreviewData(null)}
-            onConfirmSend={() => handleConfirmSend('LINE')}
-        />
-      )}
+      {showConfirmModal && <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"><div className="bg-white p-6 rounded-lg shadow-xl text-center"><CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" /><p className="text-lg font-semibold">{modalMessage}</p></div></div>}
+      {showSalesTalk && <SalesTalkModal salesTalk={profileData?.aiRecommendation?.salesTalk} onClose={() => setShowSalesTalk(false)} />}
+      {linePreviewData && <LinePreviewModal node={linePreviewData.node} caption={linePreviewData.caption} onClose={() => setLinePreviewData(null)} onConfirmSend={() => handleConfirmSend('LINE')} />}
     </div>
   );
 };
@@ -553,13 +732,7 @@ const Modal = ({ title, message, onClose }) => (
         <XCircle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
         <h3 className="text-lg font-bold mb-2">{title}</h3>
         <p className="text-gray-600 mb-6">{message}</p>
-        <button 
-            onClick={onClose} 
-            className="px-6 py-2 text-white rounded-lg shadow transition-colors duration-200"
-            style={{backgroundColor: aiaColors.primary, color: 'white'}}
-        >
-            Close
-        </button>
+        <button onClick={onClose} className="px-6 py-2 text-white rounded-lg shadow transition-colors duration-200" style={{backgroundColor: aiaColors.primary, color: 'white'}}>Close</button>
       </div>
     </div>
 );
@@ -570,9 +743,9 @@ export default function App() {
   const [showErrorModal, setShowErrorModal] = useState(false);
 
   const handleCustomerSelect = (customerId) => {
-    if (engagementJourneys[customerId]) {
+    if (allCustomers.find(c => c.id === customerId)) {
         setSelectedCustomerId(customerId);
-        setCurrentPage('canvas');
+        setCurrentPage('profile');
     } else {
         setShowErrorModal(true);
     }
@@ -587,15 +760,9 @@ export default function App() {
     <main style={{backgroundColor: aiaColors.background}} className="min-h-screen font-sans">
       <div className="container mx-auto max-w-7xl">
         {currentPage === 'dashboard' && <Dashboard onCustomerSelect={handleCustomerSelect} />}
-        {currentPage === 'canvas' && <EngagementCanvas customerId={selectedCustomerId} onBack={handleBackToDashboard} />}
+        {currentPage === 'profile' && <CustomerProfile customerId={selectedCustomerId} onBack={handleBackToDashboard} />}
       </div>
-      {showErrorModal && (
-        <Modal 
-            title="Journey Not Found"
-            message="No engagement journey is available for this customer yet."
-            onClose={() => setShowErrorModal(false)}
-        />
-      )}
+      {showErrorModal && <Modal title="Journey Not Found!" message="No engagement journey is available for this customer yet." onClose={() => setShowErrorModal(false)} />}
     </main>
   );
 }
