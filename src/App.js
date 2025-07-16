@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { ChevronRight, Mail, MessageSquare, CheckCircle, Eye, MousePointerClick, Calendar, Clock, XCircle, Sparkles, Gift, Globe, Smartphone, Send, TrendingUp, Target, User, Shield, FileText, Megaphone, Zap, BarChart2, Edit3, Settings, Phone, Mic, Clipboard, Ticket } from 'lucide-react';
+import { ChevronRight, Mail, MessageSquare, CheckCircle, Eye, MousePointerClick, Calendar, Clock, XCircle, Sparkles, Gift, Globe, Smartphone, Send, TrendingUp, Target, User, Shield, FileText, Megaphone, Zap, BarChart2, Edit3, Settings, Phone, Mic, Clipboard, Ticket, ChevronsUpDown } from 'lucide-react';
 
 // --- Branding Colors ---
 const aiaColors = {
@@ -31,9 +31,18 @@ const mockCustomerData = [
 ];
 
 const allCustomers = [
-  { id: 1, name: 'Johnathan Doe', filter: 'Single Policy', policyType: 'Life Insurance', premium: 1200, policyNo: 'T123xxx456', sumAssured: 50000, nextDueDate: '2025-01-15', segmentation: 'Young Professional' },
-  { id: 2, name: 'Jane Smith', filter: 'Maturity', policyType: 'Life Insurance', maturityDate: '2024-08-15', policyNo: 'T123xxx789', sumAssured: 250000, nextDueDate: '2024-08-01', segmentation: 'Pre-Retiree' },
-  // ... other customers
+  { id: 1, name: 'Ice Pongsathon', filter: 'Single Policy', policyType: 'Life Insurance', premium: 1200, policyNo: 'T123xxx456', sumAssured: 50000, nextDueDate: '2025-01-15', segmentation: 'Young Professional' },
+  { id: 2, name: 'Jane Smith', filter: 'Maturity', policyType: 'Life Insurance', maturityDate: '2025-08-15', policyNo: 'T123xxx789', sumAssured: 250000, nextDueDate: '2025-08-01', segmentation: 'Pre-Retiree' },
+  { id: 3, name: 'Peter Jones', filter: 'Single Policy', policyType: 'Health Insurance', premium: 1800, policyNo: 'T111456', sumAssured: 300000, nextDueDate: '2025-11-20', segmentation: 'Family Head' },
+  { id: 4, name: 'Mary Williams', filter: 'High Value', policyType: 'PA Policy', premium: 3500, policyNo: 'T123xxx012', sumAssured: 1000000, nextDueDate: '2025-09-10', segmentation: 'High Net Worth' },
+  { id: 5, name: 'David Brown', filter: 'Maturity', policyType: 'Annuity', maturityDate: '2025-09-01', policyNo: 'T199xxx456', sumAssured: 150000, nextDueDate: '2025-08-25', segmentation: 'Retiree' },
+  { id: 6, name: 'Sarah Miller', filter: 'Single Policy', policyType: 'Health Insurance', premium: 950, policyNo: 'T123xxx106', sumAssured: 75000, nextDueDate: '2025-12-05', segmentation: 'Young Professional' },
+  { id: 7, name: 'Michael Davis', filter: 'High Value', policyType: 'Life Insurance', premium: 5000, policyNo: 'T123xxx001', sumAssured: 1500000, nextDueDate: '2026-02-01', segmentation: 'High Net Worth' },
+  { id: 8, name: 'Emily Garcia', filter: 'Maturity', policyType: 'Endowment Plan', maturityDate: '2025-07-25', policyNo: 'T002xxx456', sumAssured: 100000, nextDueDate: '2025-07-20', segmentation: 'Pre-Retiree' },
+  { id: 9, name: 'Chris Lee', filter: 'Single Policy', policyType: 'Life Insurance', premium: 1500, policyNo: 'T234xxx567', sumAssured: 100000, nextDueDate: '2026-03-10', segmentation: 'Young Professional' },
+  { id: 10, name: 'Olivia Martinez', filter: 'High Value', policyType: 'Investment Linked', premium: 6000, policyNo: 'T345xxx678', sumAssured: 2000000, nextDueDate: '2025-10-15', segmentation: 'High Net Worth' },
+  { id: 11, name: 'Daniel Rodriguez', filter: 'Maturity', policyType: 'Life Insurance', maturityDate: '2025-11-05', policyNo: 'T456xxx789', sumAssured: 300000, nextDueDate: '2025-10-20', segmentation: 'Pre-Retiree' },
+  { id: 12, name: 'Sophia Hernandez', filter: 'Single Policy', policyType: 'Health Insurance', premium: 1100, policyNo: 'T567xxx890', sumAssured: 90000, nextDueDate: '2026-01-25', segmentation: 'Family Head' },
 ];
 
 const customerProfileData = {
@@ -48,7 +57,7 @@ const customerProfileData = {
             journey: 'Critical Illness Awareness',
             isReadyToBuy: true,
             salesTalk: {
-                opening: "Hi Johnathan, I was reviewing your portfolio and noticed you've built a great foundation with your life policy. Have you considered how to protect your income if you were unable to work due to a serious illness?",
+                opening: "Hi Ice, I was reviewing your portfolio and noticed you've built a great foundation with your life policy. Have you considered how to protect your income if you were unable to work due to a serious illness?",
                 keyPoints: [
                     "Critical illness plans provide a lump-sum payment upon diagnosis.",
                     "This can cover medical bills, daily expenses, and replace lost income.",
@@ -74,16 +83,16 @@ const customerProfileData = {
 
 const engagementJourneys = {
   1: {
-    customerName: 'Johnathan Doe',
+    customerName: 'Ice Pongsathon',
     journeys: [
         {
             name: 'Onboarding Journey',
             status: 'Completed',
             nodes: [
-              { day: 1, type: 'content', title: 'Welcome & Onboarding', status: 'Sent', date: '2024-07-10', time: '09:15 AM', content: { image: 'https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=1', url: 'https://your-agency.com/welcome/johndoe', caption: "Hi Johnathan, welcome to our agency! Here's your digital welcome kit to get you started. We're thrilled to have you.", aiSuggestions: ["Welcome aboard, Johnathan! We're excited to protect what matters most to you. Your welcome kit is ready for you here."], recommendedTime: "Today at 4:30 PM" } },
+              { day: 1, type: 'content', title: 'Welcome & Onboarding', status: 'Sent', date: '2024-07-10', time: '09:15 AM', content: { image: 'https://images.pexels.com/photos/3760067/pexels-photo-3760067.jpeg?auto=compress&cs=tinysrgb&w=400&h=250&dpr=1', url: 'https://your-agency.com/welcome/johndoe', caption: "Hi Ice, welcome to our agency! Here's your digital welcome kit to get you started. We're thrilled to have you.", aiSuggestions: ["Welcome aboard, Ice! We're excited to protect what matters most to you. Your welcome kit is ready for you here."], recommendedTime: "Today at 4:30 PM" } },
               { day: 7, type: 'call', title: 'First Week Follow-up Call', status: 'Completed', date: '2024-07-17', time: '11:30 AM', content: {
                   script: {
-                      opening: "Hi Johnathan, it's Alex from AIA. How are you finding everything after the first week?",
+                      opening: "Hi Ice, it's Alex from AIA. How are you finding everything after the first week?",
                       keyPoints: ["Confirm he received the welcome kit.", "Ask if he has any initial questions about his policy.", "Remind him about the AIA+ app for easy policy management."],
                       closing: "Great! Don't hesitate to reach out if anything comes up. Have a great day!"
                   },
@@ -128,7 +137,7 @@ const customerInteractions = {
     1: {
         recommendation: {
             intent: 'High Intent to Buy',
-            summary: 'Johnathan has actively engaged with all outreach, visited the policy details page, and used the app. This indicates a strong interest in his current and potentially new products.',
+            summary: 'Ice has actively engaged with all outreach, visited the policy details page, and used the app. This indicates a strong interest in his current and potentially new products.',
             nextBestAction: 'Initiate a conversation about a High Net Worth product.'
         },
         timeline: [
@@ -183,7 +192,7 @@ const CustomerChart = () => (
   </div>
 );
 
-const CustomerList = ({ onCustomerSelect }) => {
+const CustomerList = ({ onCustomerSelect, selectedCustomerId, isSidePanel = false }) => {
   const [activeFilter, setActiveFilter] = useState('All');
   const filters = ['All', 'Single Policy', 'Maturity', 'High Value'];
 
@@ -191,10 +200,43 @@ const CustomerList = ({ onCustomerSelect }) => {
     ? allCustomers
     : allCustomers.filter(c => c.filter === activeFilter);
 
+  if (isSidePanel) {
+    return (
+      <div className="bg-white p-4 rounded-xl shadow-lg h-full">
+        <h3 className="text-lg font-bold text-gray-800 mb-4" style={{color: aiaColors.textPrimary}}>Customer List</h3>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {filters.map(filter => (
+              <button
+                key={filter}
+                onClick={() => setActiveFilter(filter)}
+                className={`px-3 py-1 text-xs font-semibold rounded-full transition-all duration-300 ${activeFilter === filter ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                style={activeFilter === filter ? { backgroundColor: aiaColors.primary } : {}}
+              >
+                {filter}
+              </button>
+            ))}
+          </div>
+        <div className="space-y-2 overflow-y-auto max-h-[calc(100vh-300px)]">
+          {filteredCustomers.map(customer => (
+            <div
+              key={customer.id}
+              onClick={() => onCustomerSelect(customer.id)}
+              className={`p-3 rounded-lg cursor-pointer transition-all duration-200 ${selectedCustomerId === customer.id ? 'bg-red-100' : 'hover:bg-gray-50'}`}
+              style={selectedCustomerId === customer.id ? {borderLeft: `4px solid ${aiaColors.primary}`} : {borderLeft: '4px solid transparent'}}
+            >
+              <p className={`font-bold text-sm ${selectedCustomerId === customer.id ? 'text-red-700' : 'text-gray-800'}`}>{customer.name}</p>
+              <p className="text-xs text-gray-500">{customer.policyType}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white p-4 md:p-6 rounded-xl shadow-lg mt-8" style={{backgroundColor: aiaColors.surface}}>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-        <h3 className="text-xl font-bold text-gray-800 mb-4 sm:mb-0" style={{color: aiaColors.textPrimary}}>Filters</h3>
+        <h3 className="text-xl font-bold text-gray-800 mb-4 sm:mb-0" style={{color: aiaColors.textPrimary}}>Customer List</h3>
         <div className="flex flex-wrap gap-2">
           {filters.map(filter => (
             <button
@@ -248,14 +290,24 @@ const CustomerList = ({ onCustomerSelect }) => {
   );
 };
 
-const Dashboard = ({ onCustomerSelect }) => (
-  <div className="p-4 sm:p-6 md:p-8">
-    <h1 className="text-3xl font-extrabold mb-2" style={{color: aiaColors.textPrimary}}>Welcome Back, Agent!</h1>
-    <p className="mb-8" style={{color: aiaColors.textSecondary}}>Here's your customer engagement overview.</p>
-    <CustomerChart />
-    <CustomerList onCustomerSelect={onCustomerSelect} />
-  </div>
-);
+const Dashboard = ({ onCustomerSelect }) => {
+    const agentCodes = ['0000054509', '0000012345', '0000067890', '0000098765', '0000054321'];
+    return (
+      <div className="p-4 sm:p-6 md:p-8">
+        <div className="flex justify-between items-center mb-6">
+            <div className="relative">
+                <select className="appearance-none bg-white border border-gray-300 rounded-lg py-2 pl-3 pr-8 text-sm font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-500">
+                    {agentCodes.map(code => <option key={code}>{code}</option>)}
+                </select>
+                <ChevronsUpDown className="h-4 w-4 text-gray-500 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"/>
+            </div>
+            <h1 className="text-3xl font-extrabold" style={{color: aiaColors.textPrimary}}>Welcome back Agent!</h1>
+        </div>
+        <CustomerChart />
+        <CustomerList onCustomerSelect={onCustomerSelect} />
+      </div>
+    );
+};
 
 // --- Customer Profile Page Components ---
 
@@ -636,7 +688,7 @@ const LinePreviewModal = ({ node, caption, onClose, onConfirmSend }) => {
     );
 };
 
-const CustomerProfile = ({ customerId, onBack }) => {
+const CustomerProfile = ({ customerId, onBack, onCustomerSelect }) => {
   const [customer, setCustomer] = useState(null);
   const [profileData, setProfileData] = useState(null);
   const [journeyData, setJourneyData] = useState(null);
@@ -652,6 +704,7 @@ const CustomerProfile = ({ customerId, onBack }) => {
     setProfileData(customerProfileData[customerId]);
     setJourneyData(engagementJourneys[customerId]);
     setInteractionsData(customerInteractions[customerId] || { recommendation: null, timeline: [] });
+    setActiveTab('details'); // Reset to details tab on customer change
   }, [customerId]);
 
   const handleConfirmSend = useCallback((method) => {
@@ -682,42 +735,49 @@ const CustomerProfile = ({ customerId, onBack }) => {
 
   return (
     <div className="p-4 sm:p-6 md:p-8">
-      <button onClick={onBack} className="mb-6 font-semibold" style={{color: aiaColors.primary}}>&larr; Back to Dashboard</button>
-      <h1 className="text-3xl font-extrabold" style={{color: aiaColors.textPrimary}}>{customer.name}</h1>
-      <p className="mb-8" style={{color: aiaColors.textSecondary}}>Customer Profile</p>
-
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 mb-6">
-            {tabs.map(tab => {
-                const Icon = tab.icon;
-                const isActive = activeTab === tab.id;
-                return (
-                    <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                        className={`py-3 px-2 rounded-lg font-medium text-sm transition-all duration-300 flex items-center justify-center gap-2 whitespace-nowrap ${isActive ? 'shadow-lg text-white' : 'text-gray-600 bg-white hover:bg-gray-100'}`}
-                        style={isActive ? {backgroundColor: aiaColors.primary} : {}}
-                    > <Icon className="h-5 w-5"/> {tab.label} </button>
-                );
-            })}
-      </div>
-
-      <div className="mt-4">
-        {activeTab === 'details' && <CustomerDetailsTab profileData={profileData} onStartJourney={() => setActiveTab('journey')} onOpenSalesTalk={() => setShowSalesTalk(true)} />}
-        {activeTab === 'policies' && <PlaceholderTab title="Policies" />}
-        {activeTab === 'claims' && <PlaceholderTab title="Claims" />}
-        {activeTab === 'campaigns' && <PlaceholderTab title="Campaigns" />}
-        {activeTab === 'journey' && (
-            <div className="space-y-8">
-                {journeyData?.journeys?.length > 0 ? journeyData.journeys.map((journey, idx) => (
-                   <JourneyRenderer key={idx} journey={journey} onAction={handleNodeAction} />
-                )) : <PlaceholderTab title="Engagement Journey"/>}
+        <button onClick={onBack} className="mb-6 font-semibold" style={{color: aiaColors.primary}}>&larr; Back to Dashboard</button>
+        <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <div className="lg:col-span-1 xl:col-span-1">
+                <CustomerList onCustomerSelect={onCustomerSelect} selectedCustomerId={customerId} isSidePanel={true} />
             </div>
-        )}
-        {activeTab === 'interactions' && (
-            <>
-                <AIRecommendationInteraction recommendation={interactionsData.recommendation} />
-                <CustomerInteractionTimeline interactions={interactionsData.timeline} />
-            </>
-        )}
-      </div>
+            <div className="lg:col-span-2 xl:col-span-3">
+                <h1 className="text-3xl font-extrabold" style={{color: aiaColors.textPrimary}}>{customer.name}</h1>
+                <p className="mb-8" style={{color: aiaColors.textSecondary}}>Customer Profile</p>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 mb-6">
+                        {tabs.map(tab => {
+                            const Icon = tab.icon;
+                            const isActive = activeTab === tab.id;
+                            return (
+                                <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                                    className={`py-3 px-2 rounded-lg font-medium text-sm transition-all duration-300 flex items-center justify-center gap-2 whitespace-nowrap ${isActive ? 'shadow-lg text-white' : 'text-gray-600 bg-white hover:bg-gray-100'}`}
+                                    style={isActive ? {backgroundColor: aiaColors.primary} : {}}
+                                > <Icon className="h-5 w-5"/> {tab.label} </button>
+                            );
+                        })}
+                </div>
+
+                <div className="mt-4">
+                    {activeTab === 'details' && <CustomerDetailsTab profileData={profileData} onStartJourney={() => setActiveTab('journey')} onOpenSalesTalk={() => setShowSalesTalk(true)} />}
+                    {activeTab === 'policies' && <PlaceholderTab title="Policies" />}
+                    {activeTab === 'claims' && <PlaceholderTab title="Claims" />}
+                    {activeTab === 'campaigns' && <PlaceholderTab title="Campaigns" />}
+                    {activeTab === 'journey' && (
+                        <div className="space-y-8">
+                            {journeyData?.journeys?.length > 0 ? journeyData.journeys.map((journey, idx) => (
+                            <JourneyRenderer key={idx} journey={journey} onAction={handleNodeAction} />
+                            )) : <PlaceholderTab title="Engagement Journey"/>}
+                        </div>
+                    )}
+                    {activeTab === 'interactions' && (
+                        <>
+                            <AIRecommendationInteraction recommendation={interactionsData.recommendation} />
+                            <CustomerInteractionTimeline interactions={interactionsData.timeline} />
+                        </>
+                    )}
+                </div>
+            </div>
+        </div>
       
       {showConfirmModal && <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"><div className="bg-white p-6 rounded-lg shadow-xl text-center"><CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" /><p className="text-lg font-semibold">{modalMessage}</p></div></div>}
       {showSalesTalk && <SalesTalkModal salesTalk={profileData?.aiRecommendation?.salesTalk} onClose={() => setShowSalesTalk(false)} />}
@@ -751,6 +811,10 @@ export default function App() {
     }
   };
 
+  const handleProfileCustomerSwitch = (customerId) => {
+      setSelectedCustomerId(customerId);
+  }
+
   const handleBackToDashboard = () => {
     setCurrentPage('dashboard');
     setSelectedCustomerId(null);
@@ -758,11 +822,11 @@ export default function App() {
 
   return (
     <main style={{backgroundColor: aiaColors.background}} className="min-h-screen font-sans">
-      <div className="container mx-auto max-w-7xl">
+      <div className="container mx-auto max-w-screen-xl">
         {currentPage === 'dashboard' && <Dashboard onCustomerSelect={handleCustomerSelect} />}
-        {currentPage === 'profile' && <CustomerProfile customerId={selectedCustomerId} onBack={handleBackToDashboard} />}
+        {currentPage === 'profile' && <CustomerProfile customerId={selectedCustomerId} onBack={handleBackToDashboard} onCustomerSelect={handleProfileCustomerSwitch} />}
       </div>
-      {showErrorModal && <Modal title="Journey Not Found!" message="No engagement journey is available for this customer yet." onClose={() => setShowErrorModal(false)} />}
+      {showErrorModal && <Modal title="Journey Not Found" message="No engagement journey is available for this customer yet." onClose={() => setShowErrorModal(false)} />}
     </main>
   );
 }
