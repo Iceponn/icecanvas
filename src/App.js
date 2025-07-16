@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { ChevronRight, Mail, MessageSquare, CheckCircle, Eye, MousePointerClick, Calendar, Clock, XCircle, Sparkles, Gift, Globe, Smartphone, Send, TrendingUp, Target, User, Shield, FileText, Megaphone, Zap, BarChart2, Edit3, Settings, Phone, Mic, Clipboard, Ticket, ChevronsUpDown } from 'lucide-react';
+import { ChevronRight, Mail, MessageSquare, CheckCircle, Eye, MousePointerClick, Calendar, Clock, XCircle, Sparkles, Gift, Globe, Smartphone, Send, TrendingUp, Target, User, Shield, FileText, Megaphone, Zap, BarChart2, Edit3, Settings, Phone, Mic, Clipboard, Ticket, ChevronsUpDown, Users } from 'lucide-react';
 
 // --- Branding Colors ---
 const aiaColors = {
@@ -31,18 +31,18 @@ const mockCustomerData = [
 ];
 
 const allCustomers = [
-  { id: 1, name: 'Ice Pongsathon', filter: 'Single Policy', policyType: 'Life Insurance', premium: 1200, policyNo: 'T123xxx456', sumAssured: 50000, nextDueDate: '2025-01-15', segmentation: 'Young Professional' },
-  { id: 2, name: 'Jane Smith', filter: 'Maturity', policyType: 'Life Insurance', maturityDate: '2025-08-15', policyNo: 'T123xxx789', sumAssured: 250000, nextDueDate: '2025-08-01', segmentation: 'Pre-Retiree' },
-  { id: 3, name: 'Peter Jones', filter: 'Single Policy', policyType: 'Health Insurance', premium: 1800, policyNo: 'T111456', sumAssured: 300000, nextDueDate: '2025-11-20', segmentation: 'Family Head' },
-  { id: 4, name: 'Mary Williams', filter: 'High Value', policyType: 'PA Policy', premium: 3500, policyNo: 'T123xxx012', sumAssured: 1000000, nextDueDate: '2025-09-10', segmentation: 'High Net Worth' },
-  { id: 5, name: 'David Brown', filter: 'Maturity', policyType: 'Annuity', maturityDate: '2025-09-01', policyNo: 'T199xxx456', sumAssured: 150000, nextDueDate: '2025-08-25', segmentation: 'Retiree' },
-  { id: 6, name: 'Sarah Miller', filter: 'Single Policy', policyType: 'Health Insurance', premium: 950, policyNo: 'T123xxx106', sumAssured: 75000, nextDueDate: '2025-12-05', segmentation: 'Young Professional' },
-  { id: 7, name: 'Michael Davis', filter: 'High Value', policyType: 'Life Insurance', premium: 5000, policyNo: 'T123xxx001', sumAssured: 1500000, nextDueDate: '2026-02-01', segmentation: 'High Net Worth' },
-  { id: 8, name: 'Emily Garcia', filter: 'Maturity', policyType: 'Endowment Plan', maturityDate: '2025-07-25', policyNo: 'T002xxx456', sumAssured: 100000, nextDueDate: '2025-07-20', segmentation: 'Pre-Retiree' },
-  { id: 9, name: 'Chris Lee', filter: 'Single Policy', policyType: 'Life Insurance', premium: 1500, policyNo: 'T234xxx567', sumAssured: 100000, nextDueDate: '2026-03-10', segmentation: 'Young Professional' },
-  { id: 10, name: 'Olivia Martinez', filter: 'High Value', policyType: 'Investment Linked', premium: 6000, policyNo: 'T345xxx678', sumAssured: 2000000, nextDueDate: '2025-10-15', segmentation: 'High Net Worth' },
-  { id: 11, name: 'Daniel Rodriguez', filter: 'Maturity', policyType: 'Life Insurance', maturityDate: '2025-11-05', policyNo: 'T456xxx789', sumAssured: 300000, nextDueDate: '2025-10-20', segmentation: 'Pre-Retiree' },
-  { id: 12, name: 'Sophia Hernandez', filter: 'Single Policy', policyType: 'Health Insurance', premium: 1100, policyNo: 'T567xxx890', sumAssured: 90000, nextDueDate: '2026-01-25', segmentation: 'Family Head' },
+  { id: 1, name: 'Ice Pongsathon', filter: 'Single Policy', policyType: 'Life Insurance', premium: 1200, policyNo: 'T123xxx456', sumAssured: 50000, nextDueDate: '2025-01-15', segmentation: 'Young Professional', isActive: true, nextFollowUpDate: '2025-07-20' },
+  { id: 2, name: 'Jane Smith', filter: 'Maturity', policyType: 'Life Insurance', maturityDate: '2025-08-15', policyNo: 'T123xxx789', sumAssured: 250000, nextDueDate: '2025-08-01', segmentation: 'Pre-Retiree', isActive: true, nextFollowUpDate: '2025-07-25' },
+  { id: 3, name: 'Peter Jones', filter: 'Single Policy', policyType: 'Health Insurance', premium: 1800, policyNo: 'T111456', sumAssured: 300000, nextDueDate: '2025-11-20', segmentation: 'Family Head', isActive: false, nextFollowUpDate: '2025-09-01' },
+  { id: 4, name: 'Mary Williams', filter: 'High Value', policyType: 'PA Policy', premium: 3500, policyNo: 'T123xxx012', sumAssured: 1000000, nextDueDate: '2025-09-10', segmentation: 'High Net Worth', isActive: true, nextFollowUpDate: '2025-08-10' },
+  { id: 5, name: 'David Brown', filter: 'Maturity', policyType: 'Annuity', maturityDate: '2025-09-01', policyNo: 'T199xxx456', sumAssured: 150000, nextDueDate: '2025-08-25', segmentation: 'Retiree', isActive: false, nextFollowUpDate: null },
+  { id: 6, name: 'Sarah Miller', filter: 'Single Policy', policyType: 'Health Insurance', premium: 950, policyNo: 'T123xxx106', sumAssured: 75000, nextDueDate: '2025-12-05', segmentation: 'Young Professional', isActive: false, nextFollowUpDate: '2025-10-05' },
+  { id: 7, name: 'Michael Davis', filter: 'High Value', policyType: 'Life Insurance', premium: 5000, policyNo: 'T123xxx001', sumAssured: 1500000, nextDueDate: '2026-02-01', segmentation: 'High Net Worth', isActive: true, nextFollowUpDate: '2025-08-15' },
+  { id: 8, name: 'Emily Garcia', filter: 'Maturity', policyType: 'Endowment Plan', maturityDate: '2025-07-25', policyNo: 'T002xxx456', sumAssured: 100000, nextDueDate: '2025-07-20', segmentation: 'Pre-Retiree', isActive: true, nextFollowUpDate: '2025-07-18' },
+  { id: 9, name: 'Chris Lee', filter: 'Single Policy', policyType: 'Life Insurance', premium: 1500, policyNo: 'T234xxx567', sumAssured: 100000, nextDueDate: '2026-03-10', segmentation: 'Young Professional', isActive: false, nextFollowUpDate: null },
+  { id: 10, name: 'Olivia Martinez', filter: 'High Value', policyType: 'Investment Linked', premium: 6000, policyNo: 'T345xxx678', sumAssured: 2000000, nextDueDate: '2025-10-15', segmentation: 'High Net Worth', isActive: true, nextFollowUpDate: '2025-09-20' },
+  { id: 11, name: 'Daniel Rodriguez', filter: 'Maturity', policyType: 'Life Insurance', maturityDate: '2025-11-05', policyNo: 'T456xxx789', sumAssured: 300000, nextDueDate: '2025-10-20', segmentation: 'Pre-Retiree', isActive: false, nextFollowUpDate: '2025-09-15' },
+  { id: 12, name: 'Sophia Hernandez', filter: 'Single Policy', policyType: 'Health Insurance', premium: 1100, policyNo: 'T567xxx890', sumAssured: 90000, nextDueDate: '2026-01-25', segmentation: 'Family Head', isActive: false, nextFollowUpDate: null },
 ];
 
 const customerProfileData = {
@@ -65,7 +65,8 @@ const customerProfileData = {
                 ],
                 closing: "Would you be open to a 15-minute chat next week to explore how this could fit into your financial plan?"
             }
-        }
+        },
+        note: "Met at a networking event. Interested in tech and startups. Mentioned he's saving for a down payment on a condo."
     },
     2: {
         aiSummary: {
@@ -77,7 +78,8 @@ const customerProfileData = {
         aiRecommendation: {
             journey: 'Retirement Planning',
             isReadyToBuy: false,
-        }
+        },
+        note: ""
     }
 }
 
@@ -258,12 +260,25 @@ const CustomerList = ({ onCustomerSelect, selectedCustomerId, isSidePanel = fals
             className="p-4 bg-gray-50 rounded-lg cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
             style={{borderLeft: `5px solid ${aiaColors.primary}`}}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
                     <p className="font-bold text-lg" style={{color: aiaColors.primary}}>{customer.name}</p>
                     <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{backgroundColor: '#FEF9C3', color: '#713F12'}}>{customer.segmentation}</span>
                 </div>
-                <ChevronRight className="h-6 w-6 text-gray-400" />
+                <div className="flex items-center gap-4 text-xs">
+                    {customer.isActive && (
+                        <div className="flex items-center gap-1.5 text-green-600">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                            <span>Active</span>
+                        </div>
+                    )}
+                    {customer.nextFollowUpDate && (
+                        <div className="flex items-center gap-1.5 text-gray-500">
+                            <Calendar className="h-4 w-4" />
+                            <span>Follow up: {customer.nextFollowUpDate}</span>
+                        </div>
+                    )}
+                </div>
             </div>
             <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div>
@@ -345,13 +360,14 @@ const SalesTalkModal = ({ salesTalk, onClose }) => {
 };
 
 const CustomerDetailsTab = ({ profileData, onStartJourney, onOpenSalesTalk }) => {
+    const [note, setNote] = useState(profileData?.note || "");
     if (!profileData) return <div className="p-8 text-center text-gray-500">No customer details available.</div>;
     const { aiSummary, aiRecommendation } = profileData;
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-1">
-            <div className="bg-white p-6 rounded-xl shadow-md">
-                <div className="flex items-center gap-3 mb-4">
+            <div className="bg-white p-6 rounded-xl shadow-md space-y-6">
+                <div className="flex items-center gap-3">
                     <div className="p-2 rounded-full" style={{backgroundColor: aiaColors.primaryLight}}><Sparkles className="h-6 w-6" style={{color: aiaColors.primary}}/></div>
                     <h3 className="text-xl font-bold" style={{color: aiaColors.textPrimary}}>AI Summary</h3>
                 </div>
@@ -362,8 +378,8 @@ const CustomerDetailsTab = ({ profileData, onStartJourney, onOpenSalesTalk }) =>
                     <p><strong className="font-semibold text-gray-700">Claim Frequency:</strong> {aiSummary.claimFrequency}</p>
                 </div>
             </div>
-            <div className="bg-white p-6 rounded-xl shadow-md">
-                <div className="flex items-center gap-3 mb-4">
+            <div className="bg-white p-6 rounded-xl shadow-md space-y-6">
+                <div className="flex items-center gap-3">
                     <div className="p-2 rounded-full" style={{backgroundColor: aiaColors.primaryLight}}><Target className="h-6 w-6" style={{color: aiaColors.primary}}/></div>
                     <h3 className="text-xl font-bold" style={{color: aiaColors.textPrimary}}>AI Recommendation</h3>
                 </div>
@@ -386,6 +402,19 @@ const CustomerDetailsTab = ({ profileData, onStartJourney, onOpenSalesTalk }) =>
                     )}
                 </div>
             </div>
+            <div className="lg:col-span-2 bg-white p-6 rounded-xl shadow-md">
+                 <div className="flex items-center gap-3 mb-4">
+                    <div className="p-2 rounded-full" style={{backgroundColor: aiaColors.primaryLight}}><Edit3 className="h-6 w-6" style={{color: aiaColors.primary}}/></div>
+                    <h3 className="text-xl font-bold" style={{color: aiaColors.textPrimary}}>My Note</h3>
+                </div>
+                <textarea 
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    rows="4"
+                    placeholder="Add your personal notes about this customer..."
+                    className="w-full p-2 text-sm border-gray-200 border rounded-lg focus:ring-1 focus:ring-red-300 focus:border-red-300"
+                />
+            </div>
         </div>
     );
 };
@@ -394,18 +423,6 @@ const PlaceholderTab = ({ title }) => (
     <div className="p-8 text-center text-gray-400 bg-white rounded-xl shadow-md">
         <h3 className="text-xl font-semibold">This is the {title} tab.</h3>
         <p>Content for this section is under development.</p>
-    </div>
-);
-
-const EditableField = ({ label, value, onChange }) => (
-    <div className="relative">
-        <label className="text-xs text-gray-500">{label}</label>
-        <input 
-            type="text"
-            value={value}
-            onChange={onChange}
-            className="w-full text-sm p-1 bg-gray-100 rounded-md border border-transparent hover:border-gray-300 focus:bg-white focus:border-red-300 focus:ring-1 focus:ring-red-200 outline-none transition"
-        />
     </div>
 );
 
@@ -426,6 +443,18 @@ const JourneyStatusBadge = ({ status, date, time }) => {
         </div>
     );
 };
+
+const EditableField = ({ label, value, onChange }) => (
+    <div className="relative">
+        <label className="text-xs text-gray-500">{label}</label>
+        <input 
+            type="text"
+            value={value}
+            onChange={onChange}
+            className="w-full text-sm p-1 bg-gray-100 rounded-md border border-transparent hover:border-gray-300 focus:bg-white focus:border-red-300 focus:ring-1 focus:ring-red-200 outline-none transition"
+        />
+    </div>
+);
 
 const ContentNode = ({ node, onAction }) => {
   const [caption, setCaption] = useState(node.content.caption);
@@ -776,6 +805,12 @@ const CustomerProfile = ({ customerId, onBack, onCustomerSelect }) => {
                         </>
                     )}
                 </div>
+                 <div className="mt-8 flex justify-end">
+                    <button className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200 shadow text-sm font-semibold">
+                        <Users className="h-4 w-4" />
+                        Assign to my team
+                    </button>
+                </div>
             </div>
         </div>
       
@@ -799,7 +834,7 @@ const Modal = ({ title, message, onClose }) => (
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('dashboard');
-  const [selectedCustomerId, setSelectedCustomerId] = useState(null);
+  const [selectedCustomerId, setSelectedCustomerId] = useState(1); // Default to first customer for profile view
   const [showErrorModal, setShowErrorModal] = useState(false);
 
   const handleCustomerSelect = (customerId) => {
