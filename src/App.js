@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer, CartesianGrid, XAxis, YAxis } from 'recharts';
 import { ChevronRight, Mail, MessageSquare, CheckCircle, Eye, MousePointerClick, Calendar, Clock, XCircle, Sparkles, Gift, Globe, Smartphone, Send, TrendingUp, Target, User, Shield, FileText, Megaphone, Zap, BarChart2, Edit3, Settings, Phone, Mic, Clipboard, Ticket, ChevronsUpDown, Users } from 'lucide-react';
 
 // --- Branding Colors ---
@@ -171,7 +171,7 @@ const customerInteractions = {
 
 const CustomerChart = () => (
   <div className="bg-white p-4 md:p-6 rounded-xl shadow-lg" style={{backgroundColor: aiaColors.surface}}>
-    <h3 className="text-xl font-bold text-gray-800 mb-4" style={{color: aiaColors.textPrimary}}>Customer Dashboard</h3>
+    <h3 className="text-xl font-bold text-gray-800 mb-4" style={{color: aiaColors.textPrimary}}>Monthly Performance</h3>
     <div style={{ width: '100%', height: 300 }}>
       <ResponsiveContainer>
         <BarChart data={mockCustomerData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
@@ -193,6 +193,49 @@ const CustomerChart = () => (
     </div>
   </div>
 );
+
+const SegmentationChart = () => {
+    const data = allCustomers.reduce((acc, customer) => {
+        const segment = acc.find(s => s.name === customer.segmentation);
+        if (segment) {
+            segment.value += 1;
+        } else {
+            acc.push({ name: customer.segmentation, value: 1 });
+        }
+        return acc;
+    }, []);
+
+    const COLORS = ['#D31145', '#E85B81', '#F7A8B8', '#4A5568', '#A0AEC0'];
+
+    return (
+        <div className="bg-white p-4 md:p-6 rounded-xl shadow-lg mt-8">
+            <h3 className="text-xl font-bold text-gray-800 mb-4" style={{color: aiaColors.textPrimary}}>Customer Segmentation</h3>
+            <div style={{ width: '100%', height: 300 }}>
+                <ResponsiveContainer>
+                    <PieChart>
+                        <Pie
+                            data={data}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={false}
+                            outerRadius={100}
+                            fill="#8884d8"
+                            dataKey="value"
+                            nameKey="name"
+                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        >
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend />
+                    </PieChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
+    );
+};
 
 const CustomerList = ({ onCustomerSelect, selectedCustomerId, isSidePanel = false }) => {
   const [activeFilter, setActiveFilter] = useState('All');
@@ -236,7 +279,7 @@ const CustomerList = ({ onCustomerSelect, selectedCustomerId, isSidePanel = fals
   }
 
   return (
-    <div className="bg-white p-4 md:p-6 rounded-xl shadow-lg mt-8" style={{backgroundColor: aiaColors.surface}}>
+    <div className="bg-white p-4 md:p-6 rounded-xl shadow-lg h-full flex flex-col">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
         <h3 className="text-xl font-bold text-gray-800 mb-4 sm:mb-0" style={{color: aiaColors.textPrimary}}>Customer List</h3>
         <div className="flex flex-wrap gap-2">
@@ -252,7 +295,7 @@ const CustomerList = ({ onCustomerSelect, selectedCustomerId, isSidePanel = fals
           ))}
         </div>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4 overflow-y-auto flex-grow min-h-0">
         {filteredCustomers.map(customer => (
           <div
             key={customer.id}
@@ -260,12 +303,12 @@ const CustomerList = ({ onCustomerSelect, selectedCustomerId, isSidePanel = fals
             className="p-4 bg-gray-50 rounded-lg cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
             style={{borderLeft: `5px solid ${aiaColors.primary}`}}
           >
-            <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
                     <p className="font-bold text-lg" style={{color: aiaColors.primary}}>{customer.name}</p>
                     <span className="text-xs font-medium px-2 py-0.5 rounded-full" style={{backgroundColor: '#FEF9C3', color: '#713F12'}}>{customer.segmentation}</span>
                 </div>
-                <div className="flex items-center gap-4 text-xs">
+                <div className="flex flex-col items-end gap-1 text-xs">
                     {customer.isActive && (
                         <div className="flex items-center gap-1.5 text-green-600">
                             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -280,7 +323,7 @@ const CustomerList = ({ onCustomerSelect, selectedCustomerId, isSidePanel = fals
                     )}
                 </div>
             </div>
-            <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+             <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div>
                     <p className="text-xs text-gray-500">Policy No.</p>
                     <p className="font-semibold text-gray-700">{customer.policyNo}</p>
@@ -318,8 +361,15 @@ const Dashboard = ({ onCustomerSelect }) => {
             </div>
             <h1 className="text-3xl font-extrabold" style={{color: aiaColors.textPrimary}}>Welcome back Agent!</h1>
         </div>
-        <CustomerChart />
-        <CustomerList onCustomerSelect={onCustomerSelect} />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="lg:col-span-1">
+                <CustomerChart />
+                <SegmentationChart />
+            </div>
+            <div className="lg:col-span-1">
+                <CustomerList onCustomerSelect={onCustomerSelect} />
+            </div>
+        </div>
       </div>
     );
 };
