@@ -21,13 +21,13 @@ const mockAgent = {
     imageUrl: 'https://cdn2.downdetector.com/static/uploads/logo/AIA.png',
 };
 
-const mockCustomerData = [
-  { name: 'Jan', customers: 4, policies: 2 },
-  { name: 'Feb', customers: 3, policies: 1 },
-  { name: 'Mar', customers: 5, policies: 4 },
-  { name: 'Apr', customers: 7, policies: 5 },
-  { name: 'May', customers: 6, policies: 6 },
-  { name: 'Jun', customers: 9, policies: 7 },
+const targetCustomerData = [
+  { name: 'Maturity', customers: 15 },
+  { name: 'Potential Prestige', customers: 10 },
+  { name: 'High Propensity', customers: 19 },
+  { name: 'CI Upgrade', customers: 10 },
+  { name: 'Payor', customers: 9 },
+  { name: 'With children', customers: 5 },
 ];
 
 const allCustomers = [
@@ -169,14 +169,14 @@ const customerInteractions = {
 
 // --- Components ---
 
-const CustomerChart = () => (
+const TargetCustomerChart = () => (
   <div className="bg-white p-4 md:p-6 rounded-xl shadow-lg" style={{backgroundColor: aiaColors.surface}}>
-    <h3 className="text-xl font-bold text-gray-800 mb-4" style={{color: aiaColors.textPrimary}}>Monthly Performance</h3>
+    <h3 className="text-xl font-bold text-gray-800 mb-4" style={{color: aiaColors.textPrimary}}>ลูกค้าชี้เป้า</h3>
     <div style={{ width: '100%', height: 300 }}>
       <ResponsiveContainer>
-        <BarChart data={mockCustomerData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
+        <BarChart data={targetCustomerData} margin={{ top: 5, right: 20, left: -20, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" vertical={false} />
-          <XAxis dataKey="name" tick={{ fill: aiaColors.textSecondary }} />
+          <XAxis dataKey="name" tick={{ fill: aiaColors.textSecondary, fontSize: 10 }} angle={-25} textAnchor="end" />
           <YAxis tick={{ fill: aiaColors.textSecondary }} />
           <Tooltip
             contentStyle={{
@@ -185,9 +185,7 @@ const CustomerChart = () => (
               borderRadius: '0.75rem',
             }}
           />
-          <Legend />
-          <Bar dataKey="policies" fill={aiaColors.primary} name="Policies Sold" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="customers" fill={aiaColors.secondary} name="New Customers" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="customers" name="No. of Customers" fill={aiaColors.primary} radius={[4, 4, 0, 0]} barSize={30} />
         </BarChart>
       </ResponsiveContainer>
     </div>
@@ -195,21 +193,33 @@ const CustomerChart = () => (
 );
 
 const SegmentationChart = () => {
-    const data = allCustomers.reduce((acc, customer) => {
-        const segment = acc.find(s => s.name === customer.segmentation);
-        if (segment) {
-            segment.value += 1;
-        } else {
-            acc.push({ name: customer.segmentation, value: 1 });
-        }
-        return acc;
-    }, []);
+    const data = [
+        { name: '20-30 : <50K', value: 15 },
+        { name: '20-30 : 50-100K', value: 25 },
+        { name: '20-30 : >100K', value: 10 },
+        { name: '30-45 : <100K', value: 20 },
+        { name: '30-45 : 100-150K', value: 18 },
+        { name: '30-45 : >200K', value: 12 },
+    ];
 
-    const COLORS = ['#D31145', '#E85B81', '#F7A8B8', '#4A5568', '#A0AEC0'];
+    const COLORS = ['#D31145', '#E85B81', '#F7A8B8', '#4A5568', '#A0AEC0', '#CBD5E0'];
+    
+    const RADIAN = Math.PI / 180;
+    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name }) => {
+        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" fontSize={12}>
+                {`${(percent * 100).toFixed(0)}%`}
+            </text>
+        );
+    };
 
     return (
         <div className="bg-white p-4 md:p-6 rounded-xl shadow-lg mt-8">
-            <h3 className="text-xl font-bold text-gray-800 mb-4" style={{color: aiaColors.textPrimary}}>Customer Segmentation</h3>
+            <h3 className="text-xl font-bold text-gray-800 mb-4" style={{color: aiaColors.textPrimary}}>ช่วงอายุ และเบี้ยรวมรายปี</h3>
             <div style={{ width: '100%', height: 300 }}>
                 <ResponsiveContainer>
                     <PieChart>
@@ -218,11 +228,11 @@ const SegmentationChart = () => {
                             cx="50%"
                             cy="50%"
                             labelLine={false}
-                            outerRadius={100}
+                            label={renderCustomizedLabel}
+                            outerRadius={120}
                             fill="#8884d8"
                             dataKey="value"
                             nameKey="name"
-                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                         >
                             {data.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -363,7 +373,7 @@ const Dashboard = ({ onCustomerSelect }) => {
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="lg:col-span-1">
-                <CustomerChart />
+                <TargetCustomerChart />
                 <SegmentationChart />
             </div>
             <div className="lg:col-span-1">
